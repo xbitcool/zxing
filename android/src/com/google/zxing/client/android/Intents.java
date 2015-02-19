@@ -31,7 +31,8 @@ public final class Intents {
      * Send this intent to open the Barcodes app in scanning mode, find a barcode, and return
      * the results.
      */
-    public static final String ACTION = "com.google.zxing.client.android.SCAN";
+    //public static final String ACTION = "com.google.zxing.client.android.SCAN";
+	  public static final String ACTION = "com.develfoundation.easyqrtax.SCAN";  
 
     /**
      * By default, sending this will decode all barcodes that we understand. However it

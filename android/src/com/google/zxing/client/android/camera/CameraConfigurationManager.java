@@ -16,6 +16,7 @@
 
 package com.google.zxing.client.android.camera;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Point;
@@ -24,7 +25,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
-
 import com.google.zxing.client.android.PreferencesActivity;
 
 /**
@@ -46,16 +46,17 @@ final class CameraConfigurationManager {
   /**
    * Reads, one time, values from the camera that are needed by the app.
    */
-  void initFromCameraParameters(Camera camera) {
+  @SuppressLint("NewApi")
+void initFromCameraParameters(Camera camera) {
     Camera.Parameters parameters = camera.getParameters();
     WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
     Display display = manager.getDefaultDisplay();
     Point theScreenResolution = new Point();
     display.getSize(theScreenResolution);
     screenResolution = theScreenResolution;
-    Log.i(TAG, "Screen resolution: " + screenResolution);
+    //Log.i(TAG, "Screen resolution: " + screenResolution);
     cameraResolution = CameraConfigurationUtils.findBestPreviewSizeValue(parameters, screenResolution);
-    Log.i(TAG, "Camera resolution: " + cameraResolution);
+    //Log.i(TAG, "Camera resolution: " + cameraResolution);
   }
 
   void setDesiredCameraParameters(Camera camera, boolean safeMode) {
@@ -66,10 +67,10 @@ final class CameraConfigurationManager {
       return;
     }
 
-    Log.i(TAG, "Initial camera parameters: " + parameters.flatten());
+    //Log.i(TAG, "Initial camera parameters: " + parameters.flatten());
 
     if (safeMode) {
-      Log.w(TAG, "In camera config safe mode -- most settings will not be honored");
+      //Log.w(TAG, "In camera config safe mode -- most settings will not be honored");
     }
 
     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -101,15 +102,15 @@ final class CameraConfigurationManager {
 
     parameters.setPreviewSize(cameraResolution.x, cameraResolution.y);
 
-    Log.i(TAG, "Final camera parameters: " + parameters.flatten());
+    //Log.i(TAG, "Final camera parameters: " + parameters.flatten());
 
     camera.setParameters(parameters);
 
     Camera.Parameters afterParameters = camera.getParameters();
     Camera.Size afterSize = afterParameters.getPreviewSize();
     if (afterSize!= null && (cameraResolution.x != afterSize.width || cameraResolution.y != afterSize.height)) {
-      Log.w(TAG, "Camera said it supported preview size " + cameraResolution.x + 'x' + cameraResolution.y +
-                 ", but after setting it, preview size is " + afterSize.width + 'x' + afterSize.height);
+      //Log.w(TAG, "Camera said it supported preview size " + cameraResolution.x + 'x' + cameraResolution.y +
+      //           ", but after setting it, preview size is " + afterSize.width + 'x' + afterSize.height);
       cameraResolution.x = afterSize.width;
       cameraResolution.y = afterSize.height;
     }

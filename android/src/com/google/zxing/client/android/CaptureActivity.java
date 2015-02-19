@@ -16,21 +16,12 @@
 
 package com.google.zxing.client.android;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.Result;
-import com.google.zxing.ResultMetadataType;
-import com.google.zxing.ResultPoint;
-import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.clipboard.ClipboardInterface;
-import com.google.zxing.client.android.history.HistoryActivity;
-import com.google.zxing.client.android.history.HistoryItem;
-import com.google.zxing.client.android.history.HistoryManager;
-import com.google.zxing.client.android.result.ResultButtonListener;
-import com.google.zxing.client.android.result.ResultHandler;
-import com.google.zxing.client.android.result.ResultHandlerFactory;
-import com.google.zxing.client.android.result.supplement.SupplementalInfoRetriever;
-import com.google.zxing.client.android.share.ShareActivity;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -63,12 +54,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.Map;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.DecodeHintType;
+import com.google.zxing.Result;
+import com.google.zxing.ResultMetadataType;
+import com.google.zxing.ResultPoint;
+import com.google.zxing.client.android.camera.CameraManager;
+import com.google.zxing.client.android.clipboard.ClipboardInterface;
+import com.google.zxing.client.android.history.HistoryActivity;
+import com.google.zxing.client.android.history.HistoryItem;
+import com.google.zxing.client.android.history.HistoryManager;
+import com.google.zxing.client.android.result.ResultButtonListener;
+import com.google.zxing.client.android.result.ResultHandler;
+import com.google.zxing.client.android.result.ResultHandlerFactory;
+import com.google.zxing.client.android.result.supplement.SupplementalInfoRetriever;
+import com.google.zxing.client.android.share.ShareActivity;
 
 /**
  * This activity opens the camera and does the actual scanning on a background thread. It draws a
@@ -145,7 +145,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
   }
 
-  @Override
+
+@Override
   protected void onResume() {
     super.onResume();
 
@@ -160,7 +161,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
     resultView = findViewById(R.id.result_view);
     statusView = (TextView) findViewById(R.id.status_view);
-
+    statusView.setVisibility(View.GONE);
+    resultView.setVisibility(View.GONE);
     handler = null;
     lastResult = null;
 
@@ -346,26 +348,22 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   public boolean onOptionsItemSelected(MenuItem item) {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-    switch (item.getItemId()) {
-      case R.id.menu_share:
-        intent.setClassName(this, ShareActivity.class.getName());
-        startActivity(intent);
-        break;
-      case R.id.menu_history:
-        intent.setClassName(this, HistoryActivity.class.getName());
-        startActivityForResult(intent, HISTORY_REQUEST_CODE);
-        break;
-      case R.id.menu_settings:
-        intent.setClassName(this, PreferencesActivity.class.getName());
-        startActivity(intent);
-        break;
-      case R.id.menu_help:
-        intent.setClassName(this, HelpActivity.class.getName());
-        startActivity(intent);
-        break;
-      default:
-        return super.onOptionsItemSelected(item);
-    }
+    int itemId = item.getItemId();
+	if (itemId == R.id.menu_share) {
+		intent.setClassName(this, ShareActivity.class.getName());
+		startActivity(intent);
+	} else if (itemId == R.id.menu_history) {
+		intent.setClassName(this, HistoryActivity.class.getName());
+		startActivityForResult(intent, HISTORY_REQUEST_CODE);
+	} else if (itemId == R.id.menu_settings) {
+		intent.setClassName(this, PreferencesActivity.class.getName());
+		startActivity(intent);
+	} else if (itemId == R.id.menu_help) {
+		intent.setClassName(this, HelpActivity.class.getName());
+		startActivity(intent);
+	} else {
+		return super.onOptionsItemSelected(item);
+	}
     return true;
   }
 
@@ -528,6 +526,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     statusView.setVisibility(View.GONE);
     viewfinderView.setVisibility(View.GONE);
     resultView.setVisibility(View.VISIBLE);
+    resultView.setVisibility(View.GONE);
 
     ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode_image_view);
     if (barcode == null) {
@@ -741,6 +740,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     resultView.setVisibility(View.GONE);
     statusView.setText(R.string.msg_default_status);
     statusView.setVisibility(View.VISIBLE);
+    statusView.setVisibility(View.GONE);
     viewfinderView.setVisibility(View.VISIBLE);
     lastResult = null;
   }

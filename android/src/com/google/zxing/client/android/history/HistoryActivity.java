@@ -114,11 +114,11 @@ public final class HistoryActivity extends ListActivity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.menu_history_send:
-        CharSequence history = historyManager.buildHistory();
-        Parcelable historyFile = HistoryManager.saveHistory(history.toString());
-        if (historyFile == null) {
+    int itemId = item.getItemId();
+	if (itemId == R.id.menu_history_send) {
+		CharSequence history = historyManager.buildHistory();
+		Parcelable historyFile = HistoryManager.saveHistory(history.toString());
+		if (historyFile == null) {
           AlertDialog.Builder builder = new AlertDialog.Builder(this);
           builder.setMessage(R.string.msg_unmount_usb);
           builder.setPositiveButton(R.string.button_ok, null);
@@ -137,12 +137,11 @@ public final class HistoryActivity extends ListActivity {
             Log.w(TAG, anfe.toString());
           }
         }
-        break;
-      case R.id.menu_history_clear_text:
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.msg_sure);
-        builder.setCancelable(true);
-        builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+	} else if (itemId == R.id.menu_history_clear_text) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.msg_sure);
+		builder.setCancelable(true);
+		builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int i2) {
             historyManager.clearHistory();
@@ -150,12 +149,11 @@ public final class HistoryActivity extends ListActivity {
             finish();
           }
         });
-        builder.setNegativeButton(R.string.button_cancel, null);
-        builder.show();
-        break;
-      default:
-        return super.onOptionsItemSelected(item);
-    }
+		builder.setNegativeButton(R.string.button_cancel, null);
+		builder.show();
+	} else {
+		return super.onOptionsItemSelected(item);
+	}
     return true;
   }
 

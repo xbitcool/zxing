@@ -30,7 +30,7 @@
   <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
-  <uses-sdk android:minSdkVersion="15" android:targetSdkVersion="19"/>
+  <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="21"/>
 
   <!-- Don't require camera, as this requires a rear camera. This allows it to work on the Nexus 7 -->
   <uses-feature android:name="android.hardware.camera" android:required="false"/>
@@ -53,10 +53,9 @@
 
   <application android:icon="@drawable/launcher_icon"
                android:logo="@drawable/launcher_icon"
-               android:label="@string/app_name"
+               android:label="@string/app_name_hist"
                android:allowBackup="true">
     <activity android:name=".CaptureActivity"
-              android:screenOrientation="sensorLandscape"
               android:clearTaskOnLaunch="true"
               android:stateNotNeeded="true"
               android:theme="@style/CaptureTheme"
@@ -66,7 +65,7 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
       <intent-filter>
-        <action android:name="com.google.zxing.client.android.SCAN"/>
+        <action android:name="com.develfoundation.easyqrtax.SCAN"/>
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
       <!-- Allow web apps to launch Barcode Scanner by linking to http://zxing.appspot.com/scan. -->
